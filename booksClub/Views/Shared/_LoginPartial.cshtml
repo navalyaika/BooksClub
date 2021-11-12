@@ -1,0 +1,14 @@
+﻿<ul class="navbar-nav">
+    @if (!string.IsNullOrEmpty(User.Identity.Name))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark">@Html.ActionLink($"{User.Identity.Name}-logout", "Logout", "Home")</a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark">@Html.ActionLink("Login", "Login", "Home")</a>
+        </li>
+    }
+</ul>

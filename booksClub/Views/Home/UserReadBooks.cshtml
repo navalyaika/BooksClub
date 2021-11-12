@@ -1,0 +1,63 @@
+﻿@model booksClub.Models.BooksClubContext
+
+<p>
+    <h1>Список прочитанных книг</h1>
+</p>
+<div class="all-books-list">
+    @if (Model == null)
+    {
+        <h1>книг нет!</h1>
+    }
+    else
+    {
+        var idReadbooks = Model.UserBooks.Where(x => x.UserName == User.Identity.Name);
+        foreach (var idReadBook in idReadbooks)
+        {
+            foreach (var book in Model.Books)
+            {
+                if (idReadBook.IdBook == book.Id)
+                {
+                    <div id="@book.Id" onmouseover="ChangeDisplay(@book.Id)" onmouseout="ChangeDisplay(@book.Id)">
+                        <table border="0">
+                            <tr>
+                                <td>@book.Name</td>
+                                <td>@book.Author</td>
+                                <td>@book.Year</td>
+                                <td>
+                                    <input type="button" value="удалить из списка" style="display:none" name="b{@book.Id}" onclick="RemoveBook(@book.Id)" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+            }
+        }
+    }
+</div>
+
+<script type="text/javascript">
+
+    function ChangeDisplay(i) {
+        var btn = document.getElementsByName('b{' + i + '}')[0];
+        if (btn.style.display == 'block') {
+            btn.style.display = 'none';
+            return;
+        }
+        btn.style.display = 'block';
+    }
+
+    function RemoveBook(i) {
+        var xhr = new XMLHttpRequest();
+        i = encodeURIComponent(i);
+        xhr.open('POST', '/Home/RemoveBookToLisRead?i=' + i);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                let book = document.getElementById(i);
+                book.style.display = 'none';
+                alert(xhr.responseText);
+            }
+        }
+        xhr.setRequestHeader('Content-Type', 'application/x-www-from-urlencoded');
+        xhr.send();
+    }
+</script>

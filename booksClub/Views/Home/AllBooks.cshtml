@@ -1,0 +1,55 @@
+﻿@model booksClub.Models.BooksClubContext
+
+<p>
+    <h1>Перечень всех книг</h1>
+</p>
+<div class="all-books-list">
+    @if (Model == null)
+    {
+        <h1>книг нет!</h1>
+    }
+    else
+    {
+        foreach (var book in Model.Books)
+        {
+            <div id="@book.Id" onmouseover="ChangeDisplay(@book.Id)" onmouseout="ChangeDisplay(@book.Id)"> 
+               <table border="0">
+                   <tr>
+                       <td>@book.Name</td>
+                       <td>@book.Author</td>
+                       <td>@book.Year</td>
+                       <td>
+                           <input type="button" value="добавить в список прочитанных" style="display:none" name="b{@book.Id}" onclick="AddBook(@book.Id)" />
+                       </td>
+                   </tr>
+               </table>
+                  
+            </div>
+        }
+    }
+</div>
+
+<script type="text/javascript">
+
+    function ChangeDisplay(i) {
+        var btn = document.getElementsByName('b{' + i + '}')[0];
+        if (btn.style.display == 'block') {
+            btn.style.display = 'none';
+            return;
+        }
+        btn.style.display = 'block';
+    }
+
+    function AddBook(i) {
+        var xhr = new XMLHttpRequest();
+        i = encodeURIComponent(i);
+        xhr.open('POST', '/Home/AddBookToLisRead?i='+i);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert(xhr.responseText);
+            }
+        }
+        xhr.setRequestHeader('Content-Type', 'application/x-www-from-urlencoded');
+        xhr.send();
+    }
+</script>

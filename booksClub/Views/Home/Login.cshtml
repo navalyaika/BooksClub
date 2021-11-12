@@ -1,0 +1,10 @@
+﻿@model booksClub.Models.User
+@{
+    ViewData["Title"] = "Login";
+}
+
+    <form asp-action="Login" asp-controller="Home" asp-antiforgery="true">
+        <input asp-for="Login" placeholder="enter your login" />
+        <input type="submit" value="enter" />
+    </form>
+
